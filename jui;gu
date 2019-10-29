@@ -19,104 +19,129 @@ class MinPriorityQueue
 	// Assume that the operations of unordered_map are O(1) time 
 	// (they are average case, but not worst-case).
 
-	public:
-		// Creates an empty MinPriorityQueue
-		MinPriorityQueue()
-		{
-			//array to store heap items
-			
-		}
+public:
+	// Creates an empty MinPriorityQueue
+	MinPriorityQueue()
+	{
+		//array to store heap items
 
-		// Returns the number of elements in the MinPriorityQueue.
-		//
-		// Must run in O(1) time.
-		int size()
-		{
-			if(H.size() == 0){
-				return 0;
-			}
-			
-			else{
-				return H.size();
-			}
-				
-		}	
+	}
 
-		// Pushes a new value x with priority p
-		// into the MinPriorityQueue.
-		//
-		// Must run in O(log(n)) time.		 
-		void push(T x, int p)
-		{
-			//step 1: put at the end of vector 
-			H.push_back(make_pair(x, p));
-			//step 2: check for violation, if violation, bubbleup until no more
-			bubbleUp(H.size()-1); //size - 1 to access last element in vector
-		}
-
-		// Returns the value at the front of the MinPriorityQueue.
-		// Undefined behavior if the MinPriorityQueue is empty.
-		// 
-		// Must run in O(1) time.
-		T front()
-		{
+	// Returns the number of elements in the MinPriorityQueue.
+	//
+	// Must run in O(1) time.
+	int size()
+	{
+		return H.size();
 	
-				return H[0].first;//returns value at front of vector
-		}
-		
+	}
 
-		// Removes the value at the front of the MinPriorityQueue.
-		// Undefined behavior if the MinPriorityQueue is empty.
-		//
-		// Must run in O(log(n)) time. 
-		void pop()
-		{
+	// Pushes a new value x with priority p
+	// into the MinPriorityQueue.
+	//
+	// Must run in O(log(n)) time.		 
+	void push(T x, int p)
+	{
+		//step 1: put at the end of vector 
+		H.push_back(make_pair(x, p));
+		//step 2: check for violation, if violation, bubbleup until no more
+		bubbleUp(H.size() - 1); //size - 1 to access last element in vector
+	}
+
+	// Returns the value at the front of the MinPriorityQueue.
+	// Undefined behavior if the MinPriorityQueue is empty.
+	// 
+	// Must run in O(1) time.
+	T front()
+	{
+
+		return H[0].first;//returns value at front of vector
+	}
+
+
+	// Removes the value at the front of the MinPriorityQueue.
+	// Undefined behavior if the MinPriorityQueue is empty.
+	//
+	// Must run in O(log(n)) time. 
+	void pop()
+	{	
+
+		if (H.empty() == true) {
+			return;
+		}
+
+		else if (H.size() == 1) {
+			H.pop_back();
+		}
+
+		else {
 			//step 1: swap the front element with the element at back
-			swap(H.front(),H.back());
+			swap(H.front(), H.back());
 			//step 2: pop element at the back of vector 
 			H.pop_back();
-			//step 3: rearrange items in vector
-			bubbleUp(H.size() - 1);
-			
+			//step 3: rearrange items in vector by bubbling down the tree
+			bubbleDown(0);
 		}
 
-		// If x is in the MinPriorityQueue 
-		// with current priority at least new_p,  
-		// then changes the priority of x to new_p.
-		// Undefined behavior otherwise.
-		//
-		// Must run in O(log(n)) time. 
-		//void decrease_key(T x, int new_p)
-		//{
-			// TODO
-		//}
-		
-		void parent(int &i){ //finds parent of node in heap
-			i = (i-1)/2;
+	}
+
+	// If x is in the MinPriorityQueue 
+	// with current priority at least new_p,  
+	// then changes the priority of x to new_p.int parent = (n - 1) / 2;
+	// Undefined behavior otherwise.
+	//
+	// Must run in O(log(n)) time. 
+	//void decrease_key(T x, int new_p)
+	//{
+	// TODO
+	//}
+
+	void parent(int &i) { //finds parent of node in heap
+		i = (i - 1) / 2;
+	}
+
+	void child(int i) {
+		int child = (i * 2) + 1; //child on "left" of parent
+								 //int child2 = (i*2) + 2; //child on "right" of parent
+	}
+
+	//bubble up item n, until no more violation 
+	//violation = parent > child .. comparing priority though 
+	void bubbleUp(int n) {
+		int c = n; //create a temp variable that tracks n in place on heap
+
+		while (H[c].second < H[(n - 1) / 2].second) {
+			int parent = (n - 1) / 2;
+			swap(H[c], H[parent]);
+			c = parent;
 		}
-		
-		void child(int i){
-			int child = (i*2) + 1; //child on "left" of parent
-			//int child2 = (i*2) + 2; //child on "right" of parent
+	}
+
+	void bubbleDown(int n) {
+		int c = n;
+
+		if (H.size() == 1) {
+			return;
 		}
-		
-		//bubble up item n, until no more violation 
-		//violation = parent > child .. comparing priority though 
-		void bubbleUp(int n){
-			int c = n; //create a temp variable that tracks n in place on heap
-			
-			while (H[c].second < H[(n-1)/2].second){
-				int parent = (n-1) / 2;
-				swap(H[c].second, H[parent].second);
-				c = parent;
+		 
+		else
+		{
+			while (H[c].second > H[(n * 2) + 1].second) {
+				int child = (n * 2) + 1;
+
+				swap(H[c], H[child]);
+				c = child;
 			}
-		}
 
-	private:
-		// You don't need any other instance variables,
-		// but you can add some if you want to.
-		vector< pair<T, int> > H; // The heap.
-		unordered_map<T, int> I;  // Maps values to their indices in H.
+		}
+	}
+
+private:
+	// You don't need any other instance variables,
+	// but you can add some if you want to.
+	vector< pair<T, int> > H; // The heap.
+	unordered_map<T, int> I;  // Maps values to their indices in H.
 };
 
 #endif 
+#pragma once
