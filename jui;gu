@@ -33,7 +33,7 @@ public:
 	int size()
 	{
 		return H.size();
-	
+
 	}
 
 	// Pushes a new value x with priority p
@@ -64,9 +64,9 @@ public:
 	//
 	// Must run in O(log(n)) time. 
 	void pop()
-	{	
+	{
 
-		if (H.empty() == true) {
+		if (H.size() == 0) {
 			return;
 		}
 
@@ -96,44 +96,49 @@ public:
 	// TODO
 	//}
 
-	void parent(int &i) { //finds parent of node in heap
-		i = (i - 1) / 2;
-	}
+	//void parent(int &i) { //finds parent of node in heap
+		//i = (i - 1) / 2;
+	//}
 
-	void child(int i) {
-		int child = (i * 2) + 1; //child on "left" of parent
+	//void child(int i) {
+		//int child = (i * 2) + 1; //child on "left" of parent
 								 //int child2 = (i*2) + 2; //child on "right" of parent
-	}
+	//}
 
 	//bubble up item n, until no more violation 
 	//violation = parent > child .. comparing priority though 
 	void bubbleUp(int n) {
 		int c = n; //create a temp variable that tracks n in place on heap
 
-		while (H[c].second < H[(n - 1) / 2].second) {
-			int parent = (n - 1) / 2;
+		
+		while (H[c].second < H[(c - 1) / 2].second) 
+		{ //compares the int of node to its parents' int
+			int parent = (c - 1) / 2;
 			swap(H[c], H[parent]);
 			c = parent;
+
 		}
+
+
 	}
 
 	void bubbleDown(int n) {
 		int c = n;
 
-		if (H.size() == 1) {
-			return;
-		}
-		 
-		else
-		{
-			while (H[c].second > H[(n * 2) + 1].second) {
-				int child = (n * 2) + 1;
+		//if (H.size() == 1) {
+		//	return;
+		//}
+
+		//else
+		//{
+			while (H[c].second > H[(c * 2) + 1].second) {
+				int child = (c * 2) + 1;
 
 				swap(H[c], H[child]);
 				c = child;
 			}
 
-		}
+		//}
 	}
 
 private:
